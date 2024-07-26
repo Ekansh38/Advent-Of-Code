@@ -1,4 +1,4 @@
-use std::{fs, str::FromStr};
+use std::fs;
 
 fn read_from_file(file_path: &str) -> String {
     let contents = fs::read_to_string(file_path).expect("Something went wrong reading the file");
@@ -12,22 +12,6 @@ fn main() {
     let input = read_from_file(input_file_path);
 
     // Defining some structs
-
-    struct Bag {
-        red_cubes: i32,
-        green_cubes: i32,
-        blue_cubes: i32,
-    }
-
-    impl Bag {
-        fn new(red_cubes: i32, green_cubes: i32, blue_cubes: i32) -> Self {
-            Self {
-                red_cubes,
-                green_cubes,
-                blue_cubes,
-            }
-        }
-    }
 
     struct Pull {
         red_cubes: i32,
@@ -77,25 +61,17 @@ fn main() {
         }
     }
 
-    // Creates a new bag object with the given number of cubes of each color,
     // and creates a sum variable that stores the answer to this problem
-    let bag = Bag::new(12, 13, 14);
     let mut sum = 0;
 
     // Iterating over the lines of the input
     for line in input.lines() {
-        // Extracting the game id from the line
-        // For loop to find the colon in the line
         let mut colon_index: usize = 0;
         for (i, char) in line.chars().enumerate() {
             if char == ':' {
                 colon_index = i;
             }
         }
-
-        let index_where_id_starts = 5;
-        let game_id = &line[index_where_id_starts..colon_index];
-        let game_id = i32::from_str(game_id).unwrap(); // Converts string into a number
 
         // Extracting the different pulls from the line
 
@@ -148,21 +124,15 @@ fn main() {
             }
         }
 
-        // If the games are valid, then add the game id to the sum
+        let lowest_number_of_red_cubes_in_bag = highest_number_of_red_cubes_pulled;
+        let lowest_number_of_green_cubes_in_bag = highest_number_of_green_cubes_pulled;
+        let lowest_number_of_blue_cubes_in_bag = highest_number_of_blue_cubes_pulled;
 
-        let mut add_to_sum = true;
+        let power_of_cube_set = lowest_number_of_red_cubes_in_bag
+            * lowest_number_of_green_cubes_in_bag
+            * lowest_number_of_blue_cubes_in_bag;
 
-        if highest_number_of_red_cubes_pulled > bag.red_cubes {
-            add_to_sum = false;
-        } else if highest_number_of_green_cubes_pulled > bag.green_cubes {
-            add_to_sum = false;
-        } else if highest_number_of_blue_cubes_pulled > bag.blue_cubes {
-            add_to_sum = false;
-        }
-
-        if add_to_sum {
-            sum += game_id;
-        }
+        sum += power_of_cube_set;
     }
     println!("{sum}");
 }
